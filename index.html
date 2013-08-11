@@ -1,0 +1,756 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW" dir="<$BlogLanguageDirection$>">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><$BlogPageTitle$></title>
+<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='icon' type='image/x-icon'/>
+<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='Bookmark'/>
+<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='shortcut icon'/>
+<style>
+li {
+	border-bottom-style: dashed;
+	border-color: gray;
+	border-width: 1px;
+}
+body {
+	margin: 0px;
+}
+#navbar-iframe {
+	visibility: hidden;
+	display: none;
+}
+/*---index---*/
+#chatboxy_index {
+	padding: 0px;
+	margin: 0px 100px 0px 100px;
+	text-align: center;
+}
+/*---frame---*/
+#chatboxy_login {
+	margin: 10px;
+}
+#chatboxy_chat {
+	margin: 10px;
+}
+#chatboxy_state {
+	margin: 10px;
+}
+#chatboxy_config {
+	margin: 10px;
+}
+/*---login---*/
+#chatboxy_loginbox {
+	width: 160px;
+	text-align: center;
+}
+#chatboxy_loginbtn {
+	width: 160px;
+}
+.dollars_loginlogo {
+	margin: 10px auto;
+	background: url(https://lh5.googleusercontent.com/-sm571Vsv6Nw/TyfORx3CkiI/AAAAAAAAD9Y/Uwtoy_IXbr0/s0/ChatBoxy.png) no-repeat;
+	width: 333px;
+	height: 84px;
+}
+.dollars_loginbox {
+	margin: 10px;
+}
+.dollars_loginbtn {
+	margin: 10px;
+}
+/*---chat---*/
+#chatboxy_send {
+	margin: 10px;
+}
+#chatboxy_sendbox {
+	width: 500px;
+}
+#chatboxy_sendbtn {
+	width: 160px;
+}
+#chatboxy_messenger {
+	margin-left: -30px;
+	margin-right: 50px;
+	word-wrap: break-word;
+	overflow: hidden;
+	width: 100%;
+}
+#chatboxy_messenger li {
+	margin-right: 20px;
+	text-align: left;
+	list-style: none;
+}
+.chatboxy_ytplaybtn {
+	background: center center url(http://lh4.googleusercontent.com/-8ASOj6o26ZI/TzFEICHO8-I/AAAAAAAAD-U/d4FNVk4dpXk/s30/youtubeplaybutton.png) no-repeat;
+	width: 120px;
+	height: 90px;
+}
+.chatboxy_ytplaybtn:hover {
+	filter: alpha(opacity=70);
+	-moz-opacity:0.7;
+	opacity: 0.7;
+}
+/*---state---*/
+#chatboxy_configbtn {
+	width: 100px;
+}
+/*---config---*/
+#chatboxy_cfg_btn {
+	width: 100px;
+}
+#chatboxy_cfg_reset {
+	width: 100px;
+}
+#chatboxy_cfg_cancel {
+	width: 100px;
+}
+/*---all---*/
+.btn {
+	background-color: white;
+	color: gray;
+	border-style: solid;
+	border-color: gray;
+	border-width: 1px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+.btn:hover {
+	color: black;
+	border-color: black;
+	font-weight: bold;
+}
+.box {
+	border-style: solid;
+	border-color: gray;
+	border-width: 1px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+.box:hover {
+	color: black;
+	border-color: black;
+}
+</style>
+<script> /* </head> */ </script>
+</head>
+<!-- <body> -->
+<body>
+<div id="chatboxy_index">
+	<div id="chatboxy_login" style="display:none;">
+		<div class="dollars_loginlogo"></div>
+		<div class="dollars_loginbox">NAME: <input class="box" id="chatboxy_loginbox" type="text" /></div>
+		<div class="dollars_loginbtn"><button class="btn" id="chatboxy_loginbtn">ENTER</button></div>
+	</div>
+	<div id="chatboxy_chat" style="display:none;">
+		<div id="chatboxy_send">
+			Messenger:<br />
+			<textarea class="box" id="chatboxy_sendbox" rows="3" wrap="virtual"></textarea><br />
+			<button class="btn" id="chatboxy_sendbtn">SEND</button>
+		</div>
+		<ul id="chatboxy_messenger">Loading...</ul>
+	</div>
+	<div id="chatboxy_state" style="display:none;">
+		Idle time: <span id="chatboxy_idle_state"></span><br />
+		Database speed: <span id="chatboxy_db_state"></span><br />
+		<button class="btn" id="chatboxy_configbtn">CONFIG</button>
+		<button class="btn" id="chatboxy_blogbtn">BLOG</button>
+	</div>
+	<div id="chatboxy_config" style="display:none;">
+		ChatBoxy Version 3.1 Beta<br />
+		<br />
+		Name : <input type="text" class="box" id="chatboxy_cfg_name" /><br />
+		Color : <input type="text" class="box" id="chatboxy_cfg_color" /><br />
+		Idle time: <input type="text" class="box" id="chatboxy_cfg_idle" /><br />
+		Max results: <input type="text" class="box" id="chatboxy_cfg_max_results" /><br />
+		<button class="btn" id="chatboxy_cfg_btn">SAVE</button>
+		<button class="btn" id="chatboxy_cfg_reset">RESET</button>
+		<button class="btn" id="chatboxy_cfg_cancel">CANCEL</button>
+	</div>
+	<div id="chatboxy_blog" style="display:none;">
+		<button class="btn" id="chatboxy_blog_topback">BACK</button>
+		<Blogger>
+			<div class="post"><a name="<$BlogItemNumber$>"></a>
+				<BlogItemTitle>
+					<h3 class="post-title">
+						<BlogItemUrl><a href="<$BlogItemUrl$>" title="external link"></BlogItemUrl>
+							<$BlogItemTitle$>
+						<BlogItemUrl></a></BlogItemUrl>
+					</h3>
+				</BlogItemTitle>
+				<div class="post-body">
+					<p>
+						<$BlogItemBody$>
+					</p>
+				</div>
+				<p class="post-footer">
+					<em><$I18NPostedByAuthorNickname$> @ <a href="<$BlogItemPermalinkUrl$>" title="permanent link"><$BlogItemDateTime$></a></em>&nbsp;
+					<MainOrArchivePage>
+						<BlogItemCommentsEnabled>
+							<a class="comment-link" href="<$BlogItemCommentCreate$>"<$BlogItemCommentFormOnclick$>><span style="text-transform:lowercase"><$I18NNumComments$></span></a>
+						</BlogItemCommentsEnabled>
+						<BlogItemBacklinksEnabled>
+							<a class="comment-link" href="<$BlogItemPermalinkUrl$>#links"><span style="text-transform:lowercase"><$I18NLinksToThisPost$></span></a>
+						</BlogItemBacklinksEnabled>
+					</MainOrArchivePage>
+					<$BlogItemControl$>
+				</p>
+			</div>
+			<ItemPage>
+				<div id="comments">
+					<BlogItemCommentsEnabled><a name="comments"></a>
+						<h4><$I18NNumComments$>:</h4>
+						<dl id="comments-block">
+							<$CommentPager$>
+							<BlogItemComments>
+								<dt class="comment-poster" id="<$BlogCommentAnchorName$>"><a name="<$BlogCommentAnchorName$>"></a>
+									<$I18NCommentAuthorSaid$>
+								</dt>
+								<dd class="comment-body">
+									<p><$BlogCommentBody$></p>
+								</dd>
+								<dd class="comment-timestamp"><a href="<$BlogCommentPermalinkURL$>" title="comment permalink"><$BlogCommentDateTime$></a>
+									<$BlogCommentDeleteIcon$>
+								</dd>
+							</BlogItemComments>
+							<$CommentPager$>
+						</dl>
+						<p class="comment-timestamp">
+							<$BlogItemCreate$>
+						</p>
+						<p id="postfeeds"><$BlogItemFeedLinks$></p>
+					</BlogItemCommentsEnabled>
+					<BlogItemBacklinksEnabled>
+						<a name="links"></a><h4><$I18NLinksToThisPost$>:</h4>
+						<dl id="comments-block">
+							<BlogItemBacklinks>
+							<dt class="comment-title">
+								<$BlogBacklinkControl$>
+								<a href="<$BlogBacklinkURL$>" rel="nofollow"><$BlogBacklinkTitle$></a> <$BlogBacklinkDeleteIcon$>
+							</dt>
+							<dd class="comment-body"><$BlogBacklinkSnippet$>
+								<br />
+								<span class="comment-poster">
+									<em><$PostedByBacklinkAuthor$> @ <$BlogBacklinkDateTime$></em>
+								</span>
+							</dd>
+							</BlogItemBacklinks>
+						</dl>
+						<p class="comment-timestamp"><$BlogItemBacklinkCreate$></p>
+					</BlogItemBacklinksEnabled>
+					<p class="comment-timestamp">
+						<a href="<$BlogURL$>">&lt;&lt; <$I18NHome$></a>
+					</p>
+				</div>
+			</ItemPage>
+		</Blogger>
+		<button class="btn" id="chatboxy_blog_bottomback">BACK</button>
+	</div>
+</div>
+<script type="text/javascript">
+(function(){ //No country redirect
+	if( document.URL.match(/\.blogspot\.(com\...\/|..\/)/) ){
+		var URL = document.URL;
+		URL = URL.replace(URL.match(/\.blogspot\.(com\...\/|..\/)/)[0],".blogspot.com\/ncr\/");
+		document.location = URL;
+	}
+})()
+var chatboxy_urls = {
+	List : 'YOUR_SPREAD_SHEETS',
+	LastNum : 'YOUR_SPREAD_SHEETS',
+	SendForm : 'YOUR_SEND_FORM'
+};
+var chatboxy_regexp = {
+	time : new RegExp(/^qcbtime\:\s|\,\s(qcbname)\:\s.*|\,\s(qcbcontent)\:\s.*$/gi),
+	name : new RegExp(/^.*\,\s(qcbname)\:\s|\,\s(qcbcontent)\:\s.*$/gi),
+	content : new RegExp(/^.*\,\s(qcbcontent)\:\s/gi),
+	precodes : new RegExp(/\[code\].*\[\/code\]/),
+	precode : new RegExp(/^\[code\](.*)\[\/code\]$/),
+	url : new RegExp(/((ht|f)tps?\:\/\/[\w-@:%_\+.~#?&\/=;,\\]+)/gi),
+	image : new RegExp(/((ht|f)tps?\:\/\/[\w-@:%_\+.~#?&\/=;,\\]+(\.jpg|\.png|\.gif))/i),
+	youtube : new RegExp(/https?\:\/\/[w]{0,3}\.?youtu\.?be\.?[com]{0,3}\/[watch\?]{0,6}?[&\.=a-z]*?[v=]{0,2}?([a-zA-Z0-9_-]{11,})[&\.=a-z]*/),
+	bbcodes : new RegExp(/\[[^[]+\][^[]+\[\/[^[]+\]/gi),
+	bbcode : new RegExp(/^\[([^[]+)\]([^[]+)\[\/([^[]+)\]$/),
+	bbcodejson : {
+		"b" : {
+			regexp : new RegExp(/(.*)/),
+			action : function(code) {
+				return "<span style=\"font-weight: bold;\">" + code + "</span>";
+			}
+		},
+		"i" : {
+			regexp : new RegExp(/(.*)/),
+			action : function(code) {
+				return "<span style=\"font-style: italic;\">" + code + "</span>";
+			}
+		},
+		"u" : {
+			regexp : new RegExp(/(.*)/),
+			action : function(code) {
+				return "<span style=\"text-decoration: underline;\">" + code + "</span>";
+			}
+		},
+		"code" : {
+			regexp : new RegExp(/(.*)/),
+			action : function(code) {
+				return "[code]" + code + "[/code]";
+			}
+		}
+	}
+};
+var chatboxy_cfg = {
+	name : '',
+	color : '',
+	idle : 60,
+	max_results : 10,
+	fps : 1000
+};
+function $(id) {
+	switch(id.substr(0,1)) {
+		case '#':
+			return document.getElementById(id.substr(1));
+		case '.':
+			var elems = document.body.getElementsByTagName('*');
+			var target = id.substr(1);
+			var result=[];
+			for(i=0;j=elems[i];i++) {
+				if((j.className).indexOf(target)!=-1) result.push(j);
+			}
+			return result;
+		default:
+			return document.getElementsByTagName(id);
+	}
+}
+var chatboxy_jsonp = {
+	current : null,
+	queue : [],
+	request : function(q) {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = q.url + '&callback=chatboxy_jsonp.callback&t=' + new Date().getTime();
+		this.queue.push({
+			script : script,
+			json : q.json
+		});
+		if (!this.current) this.action();
+	},
+	action : function() {
+		this.current = null;
+		if(this.queue.length) {
+			this.current = this.queue.shift();
+			$('head')[0].appendChild(this.current.script);
+		}
+	},
+	callback : function(data) {
+		this.current.json(data);
+		$('head')[0].removeChild(this.current.script);
+		this.action();
+	}
+};
+var chatboxy_iframe = {
+	formtemp : null,
+	current : null,
+	queue : [],
+	request : function(q) {
+		var iframe = document.createElement("iframe");
+		iframe.style.display = 'none';
+		iframe.name = 'qcbiframe';
+		if(iframe.attachEvent) {
+			iframe.attachEvent("onload", function(){
+				chatboxy_iframe.loadfunction();
+			});
+		} else {
+			iframe.onload = function(){
+				chatboxy_iframe.loadfunction();
+			};
+		}
+		var form = document.createElement('form');
+		form.target = 'qcbiframe';
+		form.method = 'post';
+		form.action = chatboxy_urls.SendForm;
+		var params = {'entry.0.single':q.color+'@'+q.name, 'entry.1.single':q.content};
+		for(var key in params) {
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = key;
+			input.value = params[key];
+			form.appendChild(input);
+		}
+		this.queue.push({
+			form : form,
+			iframe : iframe,
+			flag : 0
+		});
+		if (!this.current) this.action();
+	},
+	loadfunction : function() {
+		if(this.current.flag == 1) {
+			$('body')[0].removeChild(this.current.iframe);
+			$('body')[0].removeChild(this.current.form);
+			this.action();
+		} else {
+			this.current.flag = 1;
+			this.send();
+		}
+	},
+	action : function() {
+		this.current = null;
+		if(this.queue.length) {
+			this.current = this.queue.shift();
+			$('body')[0].appendChild(this.current.iframe);
+		}
+	},
+	send : function() {
+		$('body')[0].appendChild(this.current.form);
+		this.current.form.submit();
+	}
+};
+var chatboxy_display = new function() {
+	return {
+		login : function() {
+			$('#chatboxy_login').style.display = '';
+			$('#chatboxy_chat').style.display = 'none';
+			$('#chatboxy_state').style.display = 'none';
+			$('#chatboxy_config').style.display = 'none';
+			$('#chatboxy_blog').style.display = 'none';
+		},
+		chat : function() {
+			$('#chatboxy_login').style.display = 'none';
+			$('#chatboxy_chat').style.display = '';
+			$('#chatboxy_state').style.display = '';
+			$('#chatboxy_config').style.display = 'none';
+			$('#chatboxy_blog').style.display = 'none';
+		},
+		config : function() {
+			$('#chatboxy_login').style.display = 'none';
+			$('#chatboxy_chat').style.display = 'none';
+			$('#chatboxy_state').style.display = 'none';
+			$('#chatboxy_config').style.display = '';
+			$('#chatboxy_blog').style.display = 'none';
+		},
+		blog : function() {
+			$('#chatboxy_login').style.display = 'none';
+			$('#chatboxy_chat').style.display = 'none';
+			$('#chatboxy_state').style.display = 'none';
+			$('#chatboxy_config').style.display = 'none';
+			$('#chatboxy_blog').style.display = '';
+		}
+	};
+};
+var chatboxy_localstorage = new function() {
+	return {
+		name : chatboxy_cfg.name,
+		color : chatboxy_cfg.color,
+		idle : chatboxy_cfg.idle,
+		max_results : chatboxy_cfg.max_results,
+		load : function() {
+			if(localStorage.getItem('qcbname')) {
+				this.name = localStorage.getItem('qcbname');
+			}
+			if(localStorage.getItem('qcbcolor')) {
+				this.color = localStorage.getItem('qcbcolor');
+			}
+			if(parseInt(localStorage.getItem('qcbidle'))) {
+				this.idle = parseInt(localStorage.getItem('qcbidle'));
+			}
+			if(parseInt(localStorage.getItem('qcbmax_results'))) {
+				this.max_results = parseInt(localStorage.getItem('qcbmax_results'));
+			}
+			$('#chatboxy_loginbox').value = this.name;
+			$('#chatboxy_cfg_name').value = this.name;
+			$('#chatboxy_cfg_color').value = this.color;
+			$('#chatboxy_cfg_idle').value = this.idle;
+			$('#chatboxy_cfg_max_results').value = this.max_results;
+		},
+		save : function() {
+			//Name
+			var name = $('#chatboxy_cfg_name').value;
+			if(this.name != name) {
+				$('#chatboxy_loginbox').value = name;
+				this.name = name;
+				localStorage.setItem('qcbname', name);
+			}
+			//Color
+			var color = $('#chatboxy_cfg_color').value;
+			if(this.color != color) {
+				this.color = color;
+				localStorage.setItem('qcbcolor', color);
+			}
+			//Idle
+			var idle = parseInt($('#chatboxy_cfg_idle').value);
+			if(this.idle != idle) {
+				this.idle = idle;
+				localStorage.setItem('qcbidle', idle);
+			}
+			//Max results
+			var max_results = parseInt($('#chatboxy_cfg_max_results').value);
+			if(this.max_results != max_results) {
+				localStorage.setItem('qcbmax_results', max_results);
+				this.max_results = max_results;
+				chatboxy_chat.last_entry = -1;
+			}
+		},
+		remove : function() {
+			this.name = chatboxy_cfg.name;
+			this.color = chatboxy_cfg.color;
+			this.idle = chatboxy_cfg.idle;
+			this.max_results = chatboxy_cfg.max_results;
+			$('#chatboxy_loginbox').value = chatboxy_cfg.name;
+			$('#chatboxy_cfg_name').value = chatboxy_cfg.name;
+			$('#chatboxy_cfg_color').value = chatboxy_cfg.color;
+			$('#chatboxy_cfg_idle').value = chatboxy_cfg.idle;
+			$('#chatboxy_cfg_max_results').value = chatboxy_cfg.max_results;
+			localStorage.setItem('qcbname', chatboxy_cfg.name);
+			localStorage.setItem('qcbcolor', chatboxy_cfg.color);
+			localStorage.setItem('qcbidle', chatboxy_cfg.idle);
+			localStorage.setItem('qcbmax_results', chatboxy_cfg.max_results);
+		}
+	};
+};
+var chatboxy_task = new function() {
+	return {
+		count : 0,
+		timer : null,
+		run : function() {
+			this.timer = window.setInterval("chatboxy_task.scan()", chatboxy_cfg.fps);
+		},
+		wakeup : function() {
+			if(this.count>=chatboxy_localstorage.idle) {
+				chatboxy_chat.busy_flag = 0;
+				this.run();
+			}
+			this.count = 0;
+			$('#chatboxy_idle_state').innerHTML = "0&nbsp;sec";
+		},
+		scan : function() {
+			if(!navigator.onLine) {
+				$('#chatboxy_send').innerHTML = 'Offline!! (Please press the F5 refresh)';
+			}
+			if(this.count >= chatboxy_localstorage.idle) {
+				window.clearInterval(this.timer);
+				this.timer = null;
+				this.count = chatboxy_localstorage.idle;
+				$('#chatboxy_idle_state').innerHTML = 'Freeze!!';
+			} else {
+				this.count++;
+				$('#chatboxy_idle_state').innerHTML = this.count + "&nbsp;sec";
+			}
+			if(chatboxy_chat.busy_flag == 0) {
+				chatboxy_chat.busy_flag = 1;
+				chatboxy_chat.checker();
+			}
+		}
+	};
+};
+var chatboxy_youtube = {
+	play : function(e) {
+		var code = e.getAttribute('ytcode');
+		var n = document.createElement('div');
+		n.innerHTML = "<iframe width=\"640\" height=\"360\" src=\"" +
+			"http://www.youtube.com/embed/" + code +
+			"?theme=light&autoplay=1&loop=1&playlist=" + code +
+			"\" frameborder=\"0\" allowfullscreen></iframe>";
+		e.parentNode.insertBefore(n, e);
+		e.parentNode.removeChild(e);
+	}
+};
+var chatboxy_chat = new function() {
+	return {
+		last_entry : -1,
+		busy_flag : 0,
+		t_old : new Date().getTime(),
+		init : function() {
+			chatboxy_display.login();
+			chatboxy_localstorage.load();
+			$('#chatboxy_loginbox').select();
+			this.checker();
+		},
+		submit : function() {
+			chatboxy_iframe.request({
+				name : chatboxy_localstorage.name,
+				color : chatboxy_localstorage.color,
+				content : $('#chatboxy_sendbox').value
+			});
+		},
+		format : function(str) {
+			str = str.replace(/\u003c/gi,"&lt;");
+			str = str.replace(/\u003e/gi,"&gt;");
+			str = str.replace(/\n/gi,"<br />");
+			var time = str.replace(chatboxy_regexp.time,'');
+			if(str.indexOf('qcbname')!=-1) {
+				var title = str.replace(chatboxy_regexp.name,'');
+				var name = title.substring(title.indexOf("@")+1, title.length);
+				var color = title.substring(0, title.indexOf("@"));
+			}
+			if(str.indexOf('qcbcontent')!=-1) {
+				var content = str.replace(chatboxy_regexp.content,'');
+				content = content.replace(chatboxy_regexp.precodes, function(word) {
+					return "[code]" + encodeURI(word.match(chatboxy_regexp.precode)[1]) + "[/code]";
+				});
+				content = content.replace(chatboxy_regexp.url, function(word) {
+					try {
+						if(chatboxy_regexp.youtube.test(word)) {
+							var code = encodeURI(word.match(chatboxy_regexp.youtube)[1]);
+							return "<div style=\"background: url(http://img.youtube.com/vi/" + code +
+								"/1.jpg) no-repeat; width: 120px; height: 90px;\" title=\"Click Me\" ytcode=\"" + code +
+								"\" onclick=\"chatboxy_youtube.play(this);\"><div class=\"chatboxy_ytplaybtn\"></div></div>";
+						} else if(chatboxy_regexp.image.test(word)) {
+							var code = encodeURI(word.match(chatboxy_regexp.image)[1]);
+							return "<a target=\"_blank\" href=\"" + code + "\"><img style=\"max-width: 100%;\" src=\"" + code + "\" /></a>";
+						} else {
+							return "<a target=\"_blank\" href=\"" + word + "\">" + word + "</a>";
+						}
+					} catch(e) {}
+				});
+				for(var i=0;i<3;i++) {
+					content = content.replace(chatboxy_regexp.bbcodes, function(word) {
+						var arr = word.match(chatboxy_regexp.bbcode);
+						var output = '[BBCode error]';
+						if(arr[1] == arr[3])
+							for(key in chatboxy_regexp.bbcodejson)
+								if(key == arr[1]) {
+									try {
+										output = chatboxy_regexp.bbcodejson[key].action(arr[2].match(chatboxy_regexp.bbcodejson[key].regexp)[1]);
+									} catch(e) {}
+								}
+						return output;
+					});
+				}
+				content = content.replace(chatboxy_regexp.precodes, function(word) {
+					return decodeURI(word.match(chatboxy_regexp.precode)[1]);
+				});
+			}
+			return '<span style=\"color:gray;\">'+(time||'?')+'</span>'+
+				'&nbsp;<span style=\"color:orange;\">&#8249;</span>&nbsp;'+
+				'<span style=\"font-weight:bold;color:'+(color||'Black')+';\">'+(name||'GHOST')+'</span>'+
+				'&nbsp;<span style=\"color:orange;\">&#8250;</span>'+(content||'NULL');
+		},
+		checker : function() {
+			chatboxy_chat.t_old = new Date().getTime();
+			chatboxy_jsonp.request({
+				url : chatboxy_urls.LastNum,
+				json : function(data) {
+					var old = chatboxy_chat.last_entry;
+					var newly = data.feed.entry[0].title.$t;
+					chatboxy_chat.last_entry = newly;
+					if(newly - old > 0 && (newly - old) < chatboxy_localstorage.max_results) {
+						chatboxy_chat.renew(newly - old);
+					} else if ((newly - old) < 0 || (newly - old) >= chatboxy_localstorage.max_results) {
+						chatboxy_chat.reset(chatboxy_localstorage.max_results);
+					} else {
+						chatboxy_chat.busy_flag = 0;
+					}
+					var t_new = new Date().getTime();
+					var docs_average_speed = t_new - chatboxy_chat.t_old;
+					$('#chatboxy_db_state').innerHTML = docs_average_speed + "&nbsp;ms";
+				}
+			});
+		},
+		reset : function(len) {
+			chatboxy_jsonp.request({
+				url : chatboxy_urls.List + '&max-results=' + len,
+				json : function(data) {
+					$('#chatboxy_messenger').innerHTML = '';
+					for(var key in data.feed.entry) {
+						$('#chatboxy_messenger').innerHTML += '<li>'+ chatboxy_chat.format(data.feed.entry[key].content.$t) +'</li>\n';
+					}
+					chatboxy_chat.busy_flag = 0;
+				}
+			});
+		},
+		renew : function(len) {
+			chatboxy_jsonp.request({
+				url : chatboxy_urls.List + '&max-results=' + len,
+				json : function(data) {
+					var newly = parseInt(data.feed.entry[0].title.$t);
+					var s = $('#chatboxy_messenger');
+					for(var i=len-1;i>=0;i--) {
+						//Add
+						var newstr = document.createElement('li');
+						newstr.innerHTML = chatboxy_chat.format(data.feed.entry[i].content.$t);
+						s.insertBefore(newstr ,s.getElementsByTagName('li')[0]);
+						//Del
+						var li = s.getElementsByTagName('li');
+						var t = li.length-1;
+						li[t].parentNode.removeChild(li[t]);
+					}
+					chatboxy_chat.busy_flag = 0;
+				}
+			});
+		}
+	};
+};
+$('#chatboxy_sendbtn').onclick = function() {
+	chatboxy_chat.submit();
+	$('#chatboxy_sendbox').value = '';
+};
+$('#chatboxy_sendbox').onkeydown = function(e) {
+	var keycode = window.event?e.keyCode:e.which;
+	if(keycode == 13 && e.ctrlKey) {
+		var val = this.value;
+		if (typeof this.selectionStart == "number" && typeof this.selectionEnd == "number") {
+			var start = this.selectionStart;
+			this.value = val.slice(0, start) + "\n" + val.slice(this.selectionEnd);
+			this.selectionStart = this.selectionEnd = start + 1;
+		} else if (document.selection && document.selection.createRange) {
+			this.focus();
+			var range = document.selection.createRange();
+			range.text = "\r\n";
+			range.collapse(false);
+			range.select();
+		}
+	} else if(keycode == 13 && !e.ctrlKey) {
+		chatboxy_chat.submit();
+		$('#chatboxy_sendbox').value = '';
+		return false;
+	}
+};
+$('#chatboxy_loginbox').onchange = function() {
+	$('#chatboxy_cfg_name').value = $('#chatboxy_loginbox').value;
+};
+$('#chatboxy_cfg_name').onchange = function() {
+	$('#chatboxy_loginbox').value = $('#chatboxy_cfg_name').value;
+};
+$('#chatboxy_loginbtn').onclick = function() {
+	try {
+		chatboxy_localstorage.save();
+	} catch(e) {}
+	chatboxy_display.chat();
+	chatboxy_task.run();
+};
+$('#chatboxy_configbtn').onclick = function() {
+	chatboxy_display.config();
+};
+$('#chatboxy_cfg_btn').onclick = function() {
+	chatboxy_localstorage.save();
+	chatboxy_chat.busy_flag = 1;
+	chatboxy_chat.checker();
+	chatboxy_display.chat();
+};
+$('#chatboxy_cfg_reset').onclick = function() {
+	chatboxy_localstorage.remove();
+};
+$('#chatboxy_cfg_cancel').onclick = function() {
+	chatboxy_display.chat();
+};
+$('#chatboxy_blogbtn').onclick = function() {
+	chatboxy_display.blog();
+};
+$('#chatboxy_blog_topback').onclick = function() {
+	chatboxy_display.chat();
+};
+$('#chatboxy_blog_bottomback').onclick = function() {
+	chatboxy_display.chat();
+};
+window.onmousemove = function() {
+	chatboxy_task.wakeup();
+};
+window.onkeydown = function() {
+	chatboxy_task.wakeup();
+};
+chatboxy_chat.init();
+</script>
+<!-- </body> -->
+</body>
+</html>
