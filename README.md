@@ -1,4 +1,4 @@
 ChatBoxy
 ========
 
-This is a JavaScript chat room using Google Spread Sheets.
+This is a JavaScript chat room powered by Google Spread Sheets.
