@@ -158,7 +158,7 @@ body {
 		<button class="btn" id="chatboxy_blogbtn">BLOG</button>
 	</div>
 	<div id="chatboxy_config" style="display:none;">
-		ChatBoxy Version 3.1 Beta<br />
+		ChatBoxy Version 4.0 Beta<br />
 		<br />
 		Name : <input type="text" class="box" id="chatboxy_cfg_name" /><br />
 		Color : <input type="text" class="box" id="chatboxy_cfg_color" /><br />
@@ -257,14 +257,13 @@ body {
 	}
 })()
 var chatboxy_urls = {
-	List : 'YOUR_SPREAD_SHEETS',
-	LastNum : 'YOUR_SPREAD_SHEETS',
-	SendForm : 'YOUR_SEND_FORM'
+	// List : 'YOUR_SPREAD_SHEETS',
+	// SendForm : 'YOUR_SEND_FORM'
 };
 var chatboxy_regexp = {
-	time : new RegExp(/^qcbtime\:\s|\,\s(qcbname)\:\s.*|\,\s(qcbcontent)\:\s.*$/gi),
-	name : new RegExp(/^.*\,\s(qcbname)\:\s|\,\s(qcbcontent)\:\s.*$/gi),
-	content : new RegExp(/^.*\,\s(qcbcontent)\:\s/gi),
+	// time : new RegExp(/^qcbtime\:\s|\,\s(qcbname)\:\s.*|\,\s(qcbcontent)\:\s.*$/gi),
+	// name : new RegExp(/^.*\,\s(qcbname)\:\s|\,\s(qcbcontent)\:\s.*$/gi),
+	// content : new RegExp(/^.*\,\s(qcbcontent)\:\s/gi),
 	precodes : new RegExp(/\[code\].*\[\/code\]/),
 	precode : new RegExp(/^\[code\](.*)\[\/code\]$/),
 	url : new RegExp(/((ht|f)tps?\:\/\/[\w-@:%_\+.~#?&\/=;,\\]+)/gi),
@@ -302,7 +301,7 @@ var chatboxy_regexp = {
 var chatboxy_cfg = {
 	name : '',
 	color : '',
-	idle : 60,
+	idle : 10,
 	max_results : 10,
 	fps : 1000
 };
@@ -348,62 +347,15 @@ var chatboxy_jsonp = {
 		this.action();
 	}
 };
-var chatboxy_iframe = {
-	formtemp : null,
-	current : null,
-	queue : [],
+var chatboxy_send = {
 	request : function(q) {
-		var iframe = document.createElement("iframe");
-		iframe.style.display = 'none';
-		iframe.name = 'qcbiframe';
-		if(iframe.attachEvent) {
-			iframe.attachEvent("onload", function(){
-				chatboxy_iframe.loadfunction();
+		fetch(`${chatboxy_urls.SendForm}&name=${q.color}@${q.name}&content=${q.content}`)
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function() {
+				chatboxy_send.action();
 			});
-		} else {
-			iframe.onload = function(){
-				chatboxy_iframe.loadfunction();
-			};
-		}
-		var form = document.createElement('form');
-		form.target = 'qcbiframe';
-		form.method = 'post';
-		form.action = chatboxy_urls.SendForm;
-		var params = {'entry.0.single':q.color+'@'+q.name, 'entry.1.single':q.content};
-		for(var key in params) {
-			var input = document.createElement('input');
-			input.type = 'hidden';
-			input.name = key;
-			input.value = params[key];
-			form.appendChild(input);
-		}
-		this.queue.push({
-			form : form,
-			iframe : iframe,
-			flag : 0
-		});
-		if (!this.current) this.action();
-	},
-	loadfunction : function() {
-		if(this.current.flag == 1) {
-			$('body')[0].removeChild(this.current.iframe);
-			$('body')[0].removeChild(this.current.form);
-			this.action();
-		} else {
-			this.current.flag = 1;
-			this.send();
-		}
-	},
-	action : function() {
-		this.current = null;
-		if(this.queue.length) {
-			this.current = this.queue.shift();
-			$('body')[0].appendChild(this.current.iframe);
-		}
-	},
-	send : function() {
-		$('body')[0].appendChild(this.current.form);
-		this.current.form.submit();
 	}
 };
 var chatboxy_display = new function() {
@@ -567,72 +519,88 @@ var chatboxy_chat = new function() {
 			this.checker();
 		},
 		submit : function() {
-			chatboxy_iframe.request({
+			chatboxy_send.request({
 				name : chatboxy_localstorage.name,
 				color : chatboxy_localstorage.color,
 				content : $('#chatboxy_sendbox').value
 			});
 		},
-		format : function(str) {
-			str = str.replace(/\u003c/gi,"&lt;");
+		format : function(item) {
+			function padTo2Digits(num) {
+				return num.toString().padStart(2, '0');
+			}
+			var date = new Date(item.time);
+			var time = [
+				date.getFullYear(),
+				padTo2Digits(date.getMonth() + 1),
+				padTo2Digits(date.getDate()),
+			].join('-') + ' ' + [
+				padTo2Digits(date.getHours()),
+				padTo2Digits(date.getMinutes()),
+				padTo2Digits(date.getSeconds()),
+			].join(':');
+			var name = "GHOST";
+			var color = "Black";
+
+			var str = `${item.name}`.replace(/\u003c/gi,"&lt;");
 			str = str.replace(/\u003e/gi,"&gt;");
 			str = str.replace(/\n/gi,"<br />");
-			var time = str.replace(chatboxy_regexp.time,'');
-			if(str.indexOf('qcbname')!=-1) {
-				var title = str.replace(chatboxy_regexp.name,'');
-				var name = title.substring(title.indexOf("@")+1, title.length);
-				var color = title.substring(0, title.indexOf("@"));
-			}
-			if(str.indexOf('qcbcontent')!=-1) {
-				var content = str.replace(chatboxy_regexp.content,'');
-				content = content.replace(chatboxy_regexp.precodes, function(word) {
-					return "[code]" + encodeURI(word.match(chatboxy_regexp.precode)[1]) + "[/code]";
-				});
-				content = content.replace(chatboxy_regexp.url, function(word) {
-					try {
-						if(chatboxy_regexp.youtube.test(word)) {
-							var code = encodeURI(word.match(chatboxy_regexp.youtube)[1]);
-							return "<div style=\"background: url(http://img.youtube.com/vi/" + code +
-								"/1.jpg) no-repeat; width: 120px; height: 90px;\" title=\"Click Me\" ytcode=\"" + code +
-								"\" onclick=\"chatboxy_youtube.play(this);\"><div class=\"chatboxy_ytplaybtn\"></div></div>";
-						} else if(chatboxy_regexp.image.test(word)) {
-							var code = encodeURI(word.match(chatboxy_regexp.image)[1]);
-							return "<a target=\"_blank\" href=\"" + code + "\"><img style=\"max-width: 100%;\" src=\"" + code + "\" /></a>";
-						} else {
-							return "<a target=\"_blank\" href=\"" + word + "\">" + word + "</a>";
-						}
-					} catch(e) {}
-				});
-				for(var i=0;i<3;i++) {
-					content = content.replace(chatboxy_regexp.bbcodes, function(word) {
-						var arr = word.match(chatboxy_regexp.bbcode);
-						var output = '[BBCode error]';
-						if(arr[1] == arr[3])
-							for(key in chatboxy_regexp.bbcodejson)
-								if(key == arr[1]) {
-									try {
-										output = chatboxy_regexp.bbcodejson[key].action(arr[2].match(chatboxy_regexp.bbcodejson[key].regexp)[1]);
-									} catch(e) {}
-								}
-						return output;
-					});
-				}
-				content = content.replace(chatboxy_regexp.precodes, function(word) {
-					return decodeURI(word.match(chatboxy_regexp.precode)[1]);
+			str = str.split("@");
+			color = str[0];
+			name = str[1];
+
+			var content = `${item.content}`.replace(/\u003c/gi,"&lt;");
+			content = content.replace(/\u003e/gi,"&gt;");
+			content = content.replace(/\n/gi,"<br />");
+			content = content.replace(chatboxy_regexp.precodes, function(word) {
+				return "[code]" + encodeURI(word.match(chatboxy_regexp.precode)[1]) + "[/code]";
+			});
+			content = content.replace(chatboxy_regexp.url, function(word) {
+				try {
+					if(chatboxy_regexp.youtube.test(word)) {
+						var code = encodeURI(word.match(chatboxy_regexp.youtube)[1]);
+						return "<div style=\"background: url(http://img.youtube.com/vi/" + code +
+							"/1.jpg) no-repeat; width: 120px; height: 90px;\" title=\"Click Me\" ytcode=\"" + code +
+							"\" onclick=\"chatboxy_youtube.play(this);\"><div class=\"chatboxy_ytplaybtn\"></div></div>";
+					} else if(chatboxy_regexp.image.test(word)) {
+						var code = encodeURI(word.match(chatboxy_regexp.image)[1]);
+						return "<a target=\"_blank\" href=\"" + code + "\"><img style=\"max-width: 100%;\" src=\"" + code + "\" /></a>";
+					} else {
+						return "<a target=\"_blank\" href=\"" + word + "\">" + word + "</a>";
+					}
+				} catch(e) {}
+			});
+			for(var i=0;i<3;i++) {
+				content = content.replace(chatboxy_regexp.bbcodes, function(word) {
+					var arr = word.match(chatboxy_regexp.bbcode);
+					var output = '[BBCode error]';
+					if(arr[1] == arr[3])
+						for(key in chatboxy_regexp.bbcodejson)
+							if(key == arr[1]) {
+								try {
+									output = chatboxy_regexp.bbcodejson[key].action(arr[2].match(chatboxy_regexp.bbcodejson[key].regexp)[1]);
+								} catch(e) {}
+							}
+					return output;
 				});
 			}
+			content = content.replace(chatboxy_regexp.precodes, function(word) {
+				return decodeURI(word.match(chatboxy_regexp.precode)[1]);
+			});
 			return '<span style=\"color:gray;\">'+(time||'?')+'</span>'+
 				'&nbsp;<span style=\"color:orange;\">&#8249;</span>&nbsp;'+
-				'<span style=\"font-weight:bold;color:'+(color||'Black')+';\">'+(name||'GHOST')+'</span>'+
+				'<span style=\"font-weight:bold;color:'+(color)+';\">'+(name)+'</span>'+
 				'&nbsp;<span style=\"color:orange;\">&#8250;</span>'+(content||'NULL');
 		},
 		checker : function() {
 			chatboxy_chat.t_old = new Date().getTime();
-			chatboxy_jsonp.request({
-				url : chatboxy_urls.LastNum,
-				json : function(data) {
-					var old = chatboxy_chat.last_entry;
-					var newly = data.feed.entry[0].title.$t;
+			fetch(`${chatboxy_urls.List}&limit=1`)
+				.then(function(response) {
+					return response.json();
+				})
+				.then(function(json) {
+					const old = chatboxy_chat.last_entry;
+					const newly = json.count;
 					chatboxy_chat.last_entry = newly;
 					if(newly - old > 0 && (newly - old) < chatboxy_localstorage.max_results) {
 						chatboxy_chat.renew(newly - old);
@@ -644,31 +612,32 @@ var chatboxy_chat = new function() {
 					var t_new = new Date().getTime();
 					var docs_average_speed = t_new - chatboxy_chat.t_old;
 					$('#chatboxy_db_state').innerHTML = docs_average_speed + "&nbsp;ms";
-				}
-			});
+				});
 		},
 		reset : function(len) {
-			chatboxy_jsonp.request({
-				url : chatboxy_urls.List + '&max-results=' + len,
-				json : function(data) {
+			fetch(`${chatboxy_urls.List}&limit=${len}`)
+				.then(function(response) {
+					return response.json();
+				})
+				.then(function(json) {
 					$('#chatboxy_messenger').innerHTML = '';
-					for(var key in data.feed.entry) {
-						$('#chatboxy_messenger').innerHTML += '<li>'+ chatboxy_chat.format(data.feed.entry[key].content.$t) +'</li>\n';
+					for(var key in json.data) {
+						$('#chatboxy_messenger').innerHTML += '<li>'+ chatboxy_chat.format(json.data[key]) +'</li>\n';
 					}
 					chatboxy_chat.busy_flag = 0;
-				}
-			});
+				});
 		},
 		renew : function(len) {
-			chatboxy_jsonp.request({
-				url : chatboxy_urls.List + '&max-results=' + len,
-				json : function(data) {
-					var newly = parseInt(data.feed.entry[0].title.$t);
+			fetch(`${chatboxy_urls.List}&limit=${len}`)
+				.then(function(response) {
+					return response.json();
+				})
+				.then(function(json) {
 					var s = $('#chatboxy_messenger');
 					for(var i=len-1;i>=0;i--) {
 						//Add
 						var newstr = document.createElement('li');
-						newstr.innerHTML = chatboxy_chat.format(data.feed.entry[i].content.$t);
+						newstr.innerHTML = chatboxy_chat.format(json.data[i]);
 						s.insertBefore(newstr ,s.getElementsByTagName('li')[0]);
 						//Del
 						var li = s.getElementsByTagName('li');
@@ -676,8 +645,7 @@ var chatboxy_chat = new function() {
 						li[t].parentNode.removeChild(li[t]);
 					}
 					chatboxy_chat.busy_flag = 0;
-				}
-			});
+				});
 		}
 	};
 };
@@ -700,7 +668,7 @@ $('#chatboxy_sendbox').onkeydown = function(e) {
 			range.collapse(false);
 			range.select();
 		}
-	} else if(keycode == 13 && !e.ctrlKey) {
+	} else if(keycode == 13 && !(e.ctrlKey || e.shiftKey)) {
 		chatboxy_chat.submit();
 		$('#chatboxy_sendbox').value = '';
 		return false;
