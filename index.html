@@ -1,11 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW" dir="<$BlogLanguageDirection$>">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW" dir="<$BlogLanguageDirection$>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><$BlogPageTitle$></title>
-<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='icon' type='image/x-icon'/>
-<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='Bookmark'/>
-<link href='http://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='shortcut icon'/>
+<link href='https://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='icon' type='image/x-icon'/>
+<link href='https://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='Bookmark'/>
+<link href='https://lh5.googleusercontent.com/-IOk9Wv83wBY/Tx7ZjF4KblI/AAAAAAAAD8w/vdlrR7_1v2g/s0/chatboxy.png' rel='shortcut icon'/>
 <style>
 li {
 	border-bottom-style: dashed;
@@ -81,7 +81,7 @@ body {
 	list-style: none;
 }
 .chatboxy_ytplaybtn {
-	background: center center url(http://lh4.googleusercontent.com/-8ASOj6o26ZI/TzFEICHO8-I/AAAAAAAAD-U/d4FNVk4dpXk/s30/youtubeplaybutton.png) no-repeat;
+	background: center center url(https://lh4.googleusercontent.com/-8ASOj6o26ZI/TzFEICHO8-I/AAAAAAAAD-U/d4FNVk4dpXk/s30/youtubeplaybutton.png) no-repeat;
 	width: 120px;
 	height: 90px;
 }
@@ -500,7 +500,7 @@ var chatboxy_youtube = {
 		var code = e.getAttribute('ytcode');
 		var n = document.createElement('div');
 		n.innerHTML = "<iframe width=\"640\" height=\"360\" src=\"" +
-			"http://www.youtube.com/embed/" + code +
+			"https://www.youtube.com/embed/" + code +
 			"?theme=light&autoplay=1&loop=1&playlist=" + code +
 			"\" frameborder=\"0\" allowfullscreen></iframe>";
 		e.parentNode.insertBefore(n, e);
@@ -559,7 +559,7 @@ var chatboxy_chat = new function() {
 				try {
 					if(chatboxy_regexp.youtube.test(word)) {
 						var code = encodeURI(word.match(chatboxy_regexp.youtube)[1]);
-						return "<div style=\"background: url(http://img.youtube.com/vi/" + code +
+						return "<div style=\"background: url(https://img.youtube.com/vi/" + code +
 							"/1.jpg) no-repeat; width: 120px; height: 90px;\" title=\"Click Me\" ytcode=\"" + code +
 							"\" onclick=\"chatboxy_youtube.play(this);\"><div class=\"chatboxy_ytplaybtn\"></div></div>";
 					} else if(chatboxy_regexp.image.test(word)) {
