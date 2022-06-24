@@ -18,10 +18,9 @@ function doGet(e) {
 function write_data(para) {
     var time = new Date();
     var name = `${para.name}`;
-    var content = `'${para.content}`;
-    // 插入一列新的資料
-    // sheet.appendRow([time, name, content]);
+    var content = `${para.content}`;
     var value = [time, name, content];
+    // 插入一列新的資料
     var rng = sheet.getRange(sheet.getLastRow() + 1, 1, 1, value.length);
     rng.setNumberFormats([['@', '@', '@']]);
     rng.setValues([value]);

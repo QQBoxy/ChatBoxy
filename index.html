@@ -258,7 +258,7 @@ body {
 })()
 var chatboxy_urls = {
 	// List : 'YOUR_SPREAD_SHEETS',
-	// SendForm : 'YOUR_SEND_FORM'
+	// SendForm : 'YOUR_SEND_FORM',
 };
 var chatboxy_regexp = {
 	// time : new RegExp(/^qcbtime\:\s|\,\s(qcbname)\:\s.*|\,\s(qcbcontent)\:\s.*$/gi),
@@ -349,7 +349,8 @@ var chatboxy_jsonp = {
 };
 var chatboxy_send = {
 	request : function(q) {
-		fetch(`${chatboxy_urls.SendForm}&name=${q.color}@${q.name}&content=${q.content}`)
+		const url = `${chatboxy_urls.SendForm}&name=${q.color}@${q.name}&content=${q.content}`;
+		fetch(encodeURI(url))
 			.then(function(response) {
 				return response.json();
 			})
